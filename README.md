@@ -6,6 +6,8 @@ Create a fully functional Android application using the power of Kotlin programm
 
 ## Modern Food App 
 
+Develop beautiful Android App in Android Studio 
+
 ## Technologies
 
 - Kotlin Coroutines
