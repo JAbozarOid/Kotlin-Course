@@ -1,6 +1,5 @@
 # Android Development with Kotlin
 
-# Kotlin
 Create a fully functional Android application using the power of Kotlin programming language.
 
 ## Technologies
@@ -15,7 +14,6 @@ Create a fully functional Android application using the power of Kotlin programm
 
 ```
 $ git@github.com:JAbozarOid/Kotlin-Course.git
-
 ```
 
 # Features
