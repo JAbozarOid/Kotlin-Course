@@ -4,7 +4,7 @@ Create a fully functional Android application using the power of Kotlin programm
 
 ![adk](androiddevelopment.png)
 
-# Modern Food App 
+## Modern Food App 
 
 ## Technologies
 
@@ -20,4 +20,4 @@ Create a fully functional Android application using the power of Kotlin programm
 $ git@github.com:JAbozarOid/Kotlin-Course.git
 ```
 
-# Features
+## Features
