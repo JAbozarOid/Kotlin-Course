@@ -2,6 +2,8 @@
 
 Create a fully functional Android application using the power of Kotlin programming language.
 
+![adk](androiddevelopment.png)
+
 ## Technologies
 
 - Kotlin Coroutines
