@@ -1,8 +1,8 @@
-package com.example.foody
+package com.example.foody.data
 
+import com.example.foody.data.network.FoodRecipeApi
 import com.example.foody.models.FoodRecipe
 import retrofit2.Response
-import java.time.temporal.TemporalQueries
 import javax.inject.Inject
 
 /**
