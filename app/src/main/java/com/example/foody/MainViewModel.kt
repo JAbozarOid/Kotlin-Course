@@ -24,8 +24,23 @@ class MainViewModel @ViewModelInject constructor(
 ) :
     AndroidViewModel(application) {
 
+    /**
+     * There are two types of variables – mutable and immutable
+     * mutable : the value of the mutable variable can be changed.
+     * immutable : An immutable variable is one whose value cannot be changed, also known as unchangeable or read-only variable
+     */
     var recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
 
+    /**
+     * Launch Function
+     * The launch will not block the main thread,
+     * but on the other hand, the execution of the rest part of the code will not wait for the launch result since launch is not a suspend call
+     * When to Use Launch?
+     * Launch can be used at places where users do not want to use the returned result,
+     * which is later used in performing some other work.
+     * For example, It can be used at places involving tasks like update or changing a color,
+     * as in this case returned information would be of no use.
+     */
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(queries)
     }
@@ -44,6 +59,14 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
+    /**
+     * Kotlin operators and symbols
+     * 1- !! : asserts that an expression is non-null
+     * 2- -> :
+     *      a) separates the parameters and body of a lambda expression
+     *      b) separates the parameters and return type declaration in a function type
+     *      c) separates the condition and body of a when expression branch
+     */
     private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe>? {
         when {
             response.message().toString().contains("timeout") -> {
