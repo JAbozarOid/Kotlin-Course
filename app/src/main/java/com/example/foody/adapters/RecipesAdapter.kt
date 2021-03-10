@@ -2,10 +2,12 @@ package com.example.foody.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foody.databinding.RecipesRowLayoutBinding
 import com.example.foody.models.FoodRecipe
 import com.example.foody.models.Result
+import com.example.foody.util.RecipesDiffUtil
 
 /**
  * this class must extend from RecyclerView.Adapter
@@ -61,9 +63,20 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
      * store that new data inside recipe empty list
      */
     fun setData(newData: FoodRecipe) {
+
+        // we use diffutil instead of notifyDataSetChanged()
+        val recipesDiffUtil = RecipesDiffUtil(recipe, newData.results)
+        val diffUtilResult = DiffUtil.calculateDiff(recipesDiffUtil)
         recipe = newData.results
+        diffUtilResult.dispatchUpdatesTo(this)
 
         // we need to tell recycler view to update the values when receive a new data
-        notifyDataSetChanged()
+        // this notifyDataSetChanged() method updating the whole list all over again without even checking if our new list of the recipes actually contains some recipes from our shor list
+        /**
+         * For this problem we use DiffUtil
+         * this library compare all the list of the recipes, and it will update only those recipes or views which are new
+         * this is a huge bonous for application performance
+         */
+        //notifyDataSetChanged()
     }
 }
