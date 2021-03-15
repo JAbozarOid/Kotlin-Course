@@ -1,11 +1,11 @@
 package com.example.foody.bindingadapters
 
-import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import coil.load
 import com.example.foody.R
 
 class RecipesRowBinding {
@@ -61,6 +61,14 @@ class RecipesRowBinding {
                         )
                     }
                 }
+            }
+        }
+
+        @BindingAdapter("loadImageFromUrl")
+        @JvmStatic
+        fun loadImageFromUrl(imageView: ImageView, imageUrl: String) {
+            imageView.load(imageUrl) {
+                crossfade(600)
             }
         }
     }

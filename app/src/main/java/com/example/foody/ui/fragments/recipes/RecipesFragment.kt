@@ -5,7 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.foody.MainViewModel
 import com.example.foody.R
+import com.example.foody.adapters.RecipesAdapter
+import com.example.foody.util.Constants.Companion.API_KEY
+import com.example.foody.util.NetworkResult
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_recipes.view.*
 
 /**
@@ -21,20 +30,95 @@ import kotlinx.android.synthetic.main.fragment_recipes.view.*
  * - Instead, we are going to use the offline cache to store new data from our API to our local database, and then after that, always retrieve that data from a local database,
  * and only when we need we're going to request a new data from our API
  */
+
+@AndroidEntryPoint
 class RecipesFragment : Fragment() {
 
+    /**
+     * lateinit :
+     * lateinit means late initialization.
+     * If you do not want to initialize a variable in the constructor instead you want to initialize it later on and if you can guarantee the initialization before using it, then declare that variable with lateinit keyword.
+     * It will not allocate memory until initialized.
+     */
+    private lateinit var mView: View
+
+    /**
+     * lazy :
+     * It means lazy initialization.
+     * Your variable will not be initialized unless you use that variable in your code.
+     * It will be initialized only once after that we always use the same value.
+     */
+    private val mAdapter by lazy { RecipesAdapter() }
+
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_recipes, container, false)
+        mView = inflater.inflate(R.layout.fragment_recipes, container, false)
 
-        view.recyclerview.showShimmer()
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
-        return view
+        setupRecyclerView()
+
+        requestApiData()
+
+        return mView
     }
 
+    // we create two function
+    // the first one for showing and second one for hiding shimmer effect on our recycler view
+    private fun showShimmerEffect() {
+        mView.recyclerview.showShimmer()
+    }
+
+    private fun hideShimmerEffect() {
+        mView.recyclerview.hideShimmer()
+    }
+
+    private fun setupRecyclerView() {
+        mView.recyclerview.adapter = mAdapter
+        mView.recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        showShimmerEffect()
+    }
+
+    private fun requestApiData() {
+        mainViewModel.getRecipes(applyQueries())
+        mainViewModel.recipesResponse.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is NetworkResult.Error -> {
+                    hideShimmerEffect()
+                    Toast.makeText(
+                        requireContext(),
+                        response.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is NetworkResult.Loading -> {
+                    showShimmerEffect()
+                }
+                is NetworkResult.Success -> {
+                    hideShimmerEffect()
+                    response.data?.let { mAdapter.setData(it) }
+                }
+            }
+
+        })
+    }
+
+    private fun applyQueries(): HashMap<String, String> {
+        val queries: HashMap<String, String> = HashMap()
+
+        queries["number"] = "50"
+        queries["apiKey"] = API_KEY
+        queries["type"] = "snack"
+        queries["diet"] = "vegan"
+        queries["addRecipeInformation"] = "true"
+        queries["fillIngredients"] = "true"
+
+        return queries
+    }
 
 }
