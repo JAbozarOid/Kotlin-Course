@@ -19,7 +19,7 @@ class RecipesDiffUtil(private val oldList: List<Result>, private val newList: Li
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        /**
+        /**a
          * === operator means referential equality operators
          * Referential equality :
          * Referential equality is checked by the === operation and its negated counterpart !==. a === b evaluates to true if and only if a and b point to the same object.

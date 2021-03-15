@@ -14,7 +14,7 @@ import com.example.foody.util.RecipesDiffUtil
  */
 class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
 
-    private var recipe = emptyList<Result>()
+    private var recipes = emptyList<Result>()
 
     // we must pass binding of our view to this class, RecipesRowLayoutBinding is the automatic generating class
     class MyViewHolder(private val binding: RecipesRowLayoutBinding) :
@@ -49,12 +49,12 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         // in this variable we're going to store a current item from our recycler view
         // we are using this position parameter to get dynamically the position of our row
-        val currentResult = recipe[position]
-        holder.bind(currentResult)
+        val currentRecipe = recipes[position]
+        holder.bind(currentRecipe)
     }
 
     override fun getItemCount(): Int {
-        return recipe.size
+        return recipes.size
     }
 
     // use this function for set data in here as a parameter
@@ -65,9 +65,9 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
     fun setData(newData: FoodRecipe) {
 
         // we use diffutil instead of notifyDataSetChanged()
-        val recipesDiffUtil = RecipesDiffUtil(recipe, newData.results)
+        val recipesDiffUtil = RecipesDiffUtil(recipes, newData.results)
         val diffUtilResult = DiffUtil.calculateDiff(recipesDiffUtil)
-        recipe = newData.results
+        recipes = newData.results
         diffUtilResult.dispatchUpdatesTo(this)
 
         // we need to tell recycler view to update the values when receive a new data
