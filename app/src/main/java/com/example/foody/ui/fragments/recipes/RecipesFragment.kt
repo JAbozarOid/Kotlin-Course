@@ -99,6 +99,12 @@ class RecipesFragment : Fragment() {
                 is NetworkResult.Loading -> {
                     showShimmerEffect()
                 }
+                /**
+                 * let func
+                 * takes the object it is invoked upon as the parameter and returns the result of the lambda expression.
+                 * Kotlin let is a scoping function wherein the variables declared inside the expression cannot be used outside.
+                 * it keyword contains the copy of the property inside let.
+                 */
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
                     response.data?.let { mAdapter.setData(it) }
