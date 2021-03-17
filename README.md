@@ -17,7 +17,7 @@ Develop beautiful Android App in Android Studio
 - Motion Layout
 - Dependency Injection - Dagger-Hilt
 
-### 1. Clone repo
+## Clone repo
 
 ```
 $ git@github.com:JAbozarOid/Kotlin-Course.git
