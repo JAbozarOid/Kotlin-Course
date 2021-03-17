@@ -4,7 +4,11 @@ Create a fully functional Android application using the power of Kotlin programm
 
 ![adk](androiddevelopment.png)
 
-## Modern Food App 
+## MAD Skills
+
+```
+Modern Android Development is using the latest technologies to create better application more easily, from Navigation to Kotlin to Android Studio.
+```
 
 Develop beautiful Android App in Android Studio 
 
