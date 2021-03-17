@@ -13,6 +13,7 @@ Develop beautiful Android App in Android Studio
 - Kotlin Coroutines
 - Android Architecture Component
 - Retrofit
+- Rest Api
 - Motion Layout
 - Dependency Injection - Dagger-Hilt
 
@@ -23,3 +24,5 @@ $ git@github.com:JAbozarOid/Kotlin-Course.git
 ```
 
 ## Features
+This application will work with both Remote and local data sources. And for Remote data source we will use a third party API.
+The app will be able to handle no internet connection, and store or cache the data locally to our database when it's needed.
