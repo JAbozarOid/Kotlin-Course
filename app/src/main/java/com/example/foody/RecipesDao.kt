@@ -24,7 +24,7 @@ interface RecipesDao {
      * we use flow in this dao and inside our repository, but when we reach our view model, then we are going to convert this flow to a live data
      * for importing flow use kotlin coroutine
      */
-    // Query annotation use for custom quesries
+    // Query annotation use for custom queries
     @Query("SELECT * FROM recipes_table ORDER BY id ASC")
     fun readRecipes() : Flow<List<RecipesEntity>>
 }
