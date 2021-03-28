@@ -9,8 +9,13 @@ import javax.inject.Inject
  * later we inject this Repository inside our view model
  */
 @ActivityRetainedScoped
-class Repository @Inject constructor(remoteDataSource: RemoteDataSource) {
+class Repository @Inject constructor(
+    remoteDataSource: RemoteDataSource,
+    localDataSource: LocalDataSource
+) {
 
     // we can access this variable inside our view model later
     val remote = remoteDataSource
+
+    val local = localDataSource
 }
