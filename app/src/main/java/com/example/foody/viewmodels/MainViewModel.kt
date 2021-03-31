@@ -5,12 +5,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.foody.data.Repository
+import com.example.foody.data.database.RecipesEntity
 import com.example.foody.models.FoodRecipe
 import com.example.foody.util.NetworkResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
@@ -24,11 +24,16 @@ class MainViewModel @ViewModelInject constructor(
 ) :
     AndroidViewModel(application) {
 
+    /** ROOM DATABASE */
+    // asLiveData cast kotlin flow to LiveData, "asLiveData" is in lifecycle-extensions external library"
+    val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readDatabase().asLiveData()
+
     /**
      * There are two types of variables – mutable and immutable
      * mutable : the value of the mutable variable can be changed.
      * immutable : An immutable variable is one whose value cannot be changed, also known as unchangeable or read-only variable
      */
+    /** RETROFIT */
     var recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
 
     /**
@@ -51,6 +56,12 @@ class MainViewModel @ViewModelInject constructor(
             try {
                 val response = repository.remote.getRecipes(queries)
                 recipesResponse.value = handleFoodRecipesResponse(response)
+
+                //*** if response is not null, we want to cache our response into our database
+                val foodRecipe = recipesResponse.value!!.data
+                if (foodRecipe != null) {
+                    offlineCacheRecipes(foodRecipe)
+                }
             } catch (e: Exception) {
                 recipesResponse.value = NetworkResult.Error("Recipes not found.")
             }
@@ -58,6 +69,19 @@ class MainViewModel @ViewModelInject constructor(
             recipesResponse.value = NetworkResult.Error("No Internet Connection.")
         }
     }
+
+    private fun offlineCacheRecipes(foodRecipe: FoodRecipe) {
+        // first convert food recipe model to recipe entity and then insert into database
+        // whenever we fetch a new data from our API, we're going to cache that data immediately
+        val recipesEntity = RecipesEntity(foodRecipe)
+        insertRecipes(recipesEntity)
+    }
+
+    // we use "Dispatchers.IO" because we are running a database work
+    private fun insertRecipes(recipesEntity: RecipesEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.insertRecipes(recipesEntity)
+        }
 
     /**
      * Kotlin operators and symbols
