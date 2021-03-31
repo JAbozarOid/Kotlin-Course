@@ -26,6 +26,7 @@ class MainViewModel @ViewModelInject constructor(
 
     /** ROOM DATABASE */
     // asLiveData cast kotlin flow to LiveData, "asLiveData" is in lifecycle-extensions external library"
+    // this readRecipes is not a suspend function
     val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readDatabase().asLiveData()
 
     /**

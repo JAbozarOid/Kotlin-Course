@@ -1,12 +1,14 @@
 package com.example.foody.ui.fragments.recipes
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foody.viewmodels.MainViewModel
 import com.example.foody.R
@@ -16,6 +18,7 @@ import com.example.foody.util.NetworkResult
 import com.example.foody.viewmodels.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_recipes.view.*
+import kotlinx.coroutines.launch
 
 /**
  * - RecipesFragment Class depend to MainViewModel class
@@ -73,7 +76,11 @@ class RecipesFragment : Fragment() {
 
         setupRecyclerView()
 
-        requestApiData()
+        //* whenever we open up our application, we are going to request a new data every time
+        //** instead of requesting a new data, every time we want to read our database and only if database is empty then we're going to call this a request API data
+        //*** so we remove this "requestApiData" function and read data from our database
+        //requestApiData()
+        readDatabase()
 
         return mView
     }
@@ -94,12 +101,33 @@ class RecipesFragment : Fragment() {
         showShimmerEffect()
     }
 
+    // because the "readRecipes" in mainViewModel is not a suspend function we can put observer inside of lifecycle scope
+    private fun readDatabase() {
+        lifecycleScope.launch {
+            mainViewModel.readRecipes.observe(viewLifecycleOwner, { database ->
+                // if database is not empty read from our database, it means we have some data in our database
+                if (database.isNotEmpty()) {
+                    Log.d("RecipesFragment", "readDatabase called!")
+                    // we have one row in our database and each time we have new data it just replace with first row
+                    // one row means first index[0]
+                    mAdapter.setData(database[0].foodRecipe)
+                    hideShimmerEffect()
+                } else {
+                    requestApiData()
+                }
+            })
+        }
+
+    }
+
     private fun requestApiData() {
+        Log.d("RecipesFragment", "requestApiData called!")
         mainViewModel.getRecipes(recipesViewModel.applyQueries())
         mainViewModel.recipesResponse.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is NetworkResult.Error -> {
                     hideShimmerEffect()
+                    loadDataFromCache()
                     Toast.makeText(
                         requireContext(),
                         response.message.toString(),
@@ -124,6 +152,16 @@ class RecipesFragment : Fragment() {
         })
     }
 
+    // when request API data and occurred error instead of showing the empty list, show the previous state of the list
+    // because the "readRecipes" in mainViewModel is not a suspend function we can put observer inside of lifecycle scope
+    private fun loadDataFromCache() {
+        lifecycleScope.launch {
+            mainViewModel.readRecipes.observe(viewLifecycleOwner, { database ->
+                if (database.isNotEmpty()) {
+                    mAdapter.setData(database[0].foodRecipe)
+                }
+            })
+        }
 
-
+    }
 }
