@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foody.viewmodels.MainViewModel
 import com.example.foody.R
 import com.example.foody.adapters.RecipesAdapter
-import com.example.foody.util.Constants.Companion.API_KEY
 import com.example.foody.util.NetworkResult
+import com.example.foody.util.observeOnce
 import com.example.foody.viewmodels.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_recipes.view.*
@@ -102,9 +102,27 @@ class RecipesFragment : Fragment() {
     }
 
     // because the "readRecipes" in mainViewModel is not a suspend function we can put observer inside of lifecycle scope
+    // *** for call the observer only once, we replace our extension function "observeOnce" with default observe
     private fun readDatabase() {
-        lifecycleScope.launch {
+        // <<< *** this readRecipes.observe replace with below readRecipes.observeOnce
+        /*lifecycleScope.launch {
             mainViewModel.readRecipes.observe(viewLifecycleOwner, { database ->
+                // if database is not empty read from our database, it means we have some data in our database
+                if (database.isNotEmpty()) {
+                    Log.d("RecipesFragment", "readDatabase called!")
+                    // we have one row in our database and each time we have new data it just replace with first row
+                    // one row means first index[0]
+                    mAdapter.setData(database[0].foodRecipe)
+                    hideShimmerEffect()
+                } else {
+                    requestApiData()
+                }
+            })
+        }*/
+        // this readRecipes.observe replace with below readRecipes.observeOnce *** >>>
+
+        lifecycleScope.launch {
+            mainViewModel.readRecipes.observeOnce(viewLifecycleOwner, { database ->
                 // if database is not empty read from our database, it means we have some data in our database
                 if (database.isNotEmpty()) {
                     Log.d("RecipesFragment", "readDatabase called!")
