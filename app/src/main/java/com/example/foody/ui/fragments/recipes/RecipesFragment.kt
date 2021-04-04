@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foody.viewmodels.MainViewModel
 import com.example.foody.R
 import com.example.foody.adapters.RecipesAdapter
+import com.example.foody.databinding.FragmentRecipesBinding
 import com.example.foody.util.NetworkResult
 import com.example.foody.util.observeOnce
 import com.example.foody.viewmodels.RecipesViewModel
@@ -37,13 +38,18 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class RecipesFragment : Fragment() {
 
+    // we should bind our MainViewModel with the exact variable  which we have created in fragment_recipes.xml
+    // when we have converted our fragment_recipes.xml layout to binding layout the FragmentRecipesBinding is automatically created.
+    private var _binding: FragmentRecipesBinding? = null
+    private val binding get() = _binding!!
+
     /**
      * lateinit :
      * lateinit means late initialization.
      * If you do not want to initialize a variable in the constructor instead you want to initialize it later on and if you can guarantee the initialization before using it, then declare that variable with lateinit keyword.
      * It will not allocate memory until initialized.
      */
-    private lateinit var mView: View
+    // private lateinit var mView: View //*** after we converted fragment_recipes.xml to binding layout we replace mView with _binding
 
     /**
      * lazy :
@@ -72,7 +78,10 @@ class RecipesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_recipes, container, false)
+        //mView = inflater.inflate(R.layout.fragment_recipes, container, false)
+        _binding = FragmentRecipesBinding.inflate(inflater,container,false)
+        binding.lifecycleOwner = this
+        binding.mainViewModel = mainViewModel
 
         setupRecyclerView()
 
@@ -82,22 +91,27 @@ class RecipesFragment : Fragment() {
         //requestApiData()
         readDatabase()
 
-        return mView
+        //return mView
+        return binding.root
     }
 
     // we create two function
     // the first one for showing and second one for hiding shimmer effect on our recycler view
     private fun showShimmerEffect() {
-        mView.recyclerview.showShimmer()
+        //mView.recyclerview.showShimmer()
+        binding.recyclerview.showShimmer()
     }
 
     private fun hideShimmerEffect() {
-        mView.recyclerview.hideShimmer()
+        //mView.recyclerview.hideShimmer()
+        binding.recyclerview.hideShimmer()
     }
 
     private fun setupRecyclerView() {
-        mView.recyclerview.adapter = mAdapter
-        mView.recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        //mView.recyclerview.adapter = mAdapter
+        binding.recyclerview.adapter = mAdapter
+        //mView.recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         showShimmerEffect()
     }
 
@@ -181,5 +195,11 @@ class RecipesFragment : Fragment() {
             })
         }
 
+    }
+
+    // we are going to avoid the memory leaks
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
