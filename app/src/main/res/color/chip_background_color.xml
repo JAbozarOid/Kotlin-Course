@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- we are going to create two colors, one for when chip is selected and the other one for when chip is not selected -->
+    <item android:color="@color/checkedChipBackgroundColor" android:state_checked="true"/>
+    <item android:color="@color/chipBackgroundColor" android:state_checked="false"/>
+
+
+</selector>
