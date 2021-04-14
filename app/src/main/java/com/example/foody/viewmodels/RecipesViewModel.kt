@@ -19,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+// RecipesViewModel share between RecipesBottomSheetFragment class and RecipesFragment
+
 // with this annotation, I have injected DataStoreRepository inside our recipe's viewModel
 class RecipesViewModel @ViewModelInject constructor(
     application: Application,
@@ -29,7 +31,7 @@ class RecipesViewModel @ViewModelInject constructor(
     private var mealType = DEFAULT_MEAL_TYPE
     private var dietType = DEFAULT_DIET_TYPE
 
-    private val readMealAndDietType = dataStoreRepository.readMealAndDiet
+    val readMealAndDietType = dataStoreRepository.readMealAndDiet
 
     fun applyQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
