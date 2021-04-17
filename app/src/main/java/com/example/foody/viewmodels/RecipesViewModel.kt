@@ -4,6 +4,7 @@ import android.app.Application
 import android.widget.Toast
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.foody.data.DataStoreRepository
 import com.example.foody.util.Constants.Companion.API_KEY
@@ -36,6 +37,9 @@ class RecipesViewModel @ViewModelInject constructor(
 
     // *** with this variable we are going to check the Network is available or not
     var networkStatus = false
+    var backOnline = false
+
+    val readBackOnline = dataStoreRepository.readBackOnline.asLiveData()
 
     fun applyQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
@@ -73,6 +77,19 @@ class RecipesViewModel @ViewModelInject constructor(
     fun showNetworkStatus() {
         if (!networkStatus) {
             Toast.makeText(getApplication(), "No Internet Connection", Toast.LENGTH_SHORT).show()
+            saveBackOnline(true)
+        } else if (networkStatus) {
+            if (backOnline) {
+                Toast.makeText(getApplication(), "We're back online", Toast.LENGTH_SHORT)
+                    .show()
+                saveBackOnline(false)
+            }
         }
     }
+
+    fun saveBackOnline(backOnline: Boolean) =
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.saveBackOnline(backOnline)
+        }
+
 }

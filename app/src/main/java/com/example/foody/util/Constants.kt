@@ -30,5 +30,8 @@ class Constants {
         // Name of the Preference that all value will be Stored
         const val PREFERENCES_NAME = "foody_preferences"
 
+        // constant for when the device of the user has internet connection again
+        const val PREFERENCES_BACK_ONLINE = "backOnline"
+
     }
 }

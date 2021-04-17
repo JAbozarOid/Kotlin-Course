@@ -97,11 +97,11 @@ class RecipesFragment : Fragment() {
 
         setupRecyclerView()
 
-        //* whenever we open up our application, we are going to request a new data every time
-        //** instead of requesting a new data, every time we want to read our database and only if database is empty then we're going to call this a request API data
-        //*** so we remove this "requestApiData" function and read data from our database
-        //requestApiData()
-        readDatabase()
+        // set the latest value from DataStore to backOnline
+        recipesViewModel.readBackOnline.observe(viewLifecycleOwner,{
+            recipesViewModel.backOnline = it
+        })
+
 
         // *** check network available or not
         lifecycleScope.launch {
@@ -111,6 +111,12 @@ class RecipesFragment : Fragment() {
                 Log.d("NetworkListener", status.toString())
                 recipesViewModel.networkStatus = status
                 recipesViewModel.showNetworkStatus()
+
+                //* whenever we open up our application, we are going to request a new data every time
+                //** instead of requesting a new data, every time we want to read our database and only if database is empty then we're going to call this a request API data
+                //*** so we remove this "requestApiData" function and read data from our database
+                //requestApiData()
+                readDatabase()
             }
         }
 
@@ -121,7 +127,7 @@ class RecipesFragment : Fragment() {
             if (recipesViewModel.networkStatus) {
                 findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheetFragment)
 
-            }else {
+            } else {
                 // toast a message that there is no internet connection
                 recipesViewModel.showNetworkStatus()
             }
