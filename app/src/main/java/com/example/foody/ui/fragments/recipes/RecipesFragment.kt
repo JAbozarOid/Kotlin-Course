@@ -16,11 +16,13 @@ import com.example.foody.viewmodels.MainViewModel
 import com.example.foody.R
 import com.example.foody.adapters.RecipesAdapter
 import com.example.foody.databinding.FragmentRecipesBinding
+import com.example.foody.util.NetworkListener
 import com.example.foody.util.NetworkResult
 import com.example.foody.util.observeOnce
 import com.example.foody.viewmodels.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_recipes.view.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -69,6 +71,9 @@ class RecipesFragment : Fragment() {
     // if the RecipesFragmentArgs doesn't exist please rebuild project
     private val args by navArgs<RecipesFragmentArgs>()
 
+    // create a variable for listen to network state
+    private lateinit var networkListener: NetworkListener
+
 
     // this method is called before on create view
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +91,7 @@ class RecipesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         //mView = inflater.inflate(R.layout.fragment_recipes, container, false)
-        _binding = FragmentRecipesBinding.inflate(inflater,container,false)
+        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
 
@@ -98,9 +103,28 @@ class RecipesFragment : Fragment() {
         //requestApiData()
         readDatabase()
 
+        // *** check network available or not
+        lifecycleScope.launch {
+            // collect is a suspend function and must be run in Coroutine
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(requireContext()).collect { status ->
+                Log.d("NetworkListener", status.toString())
+                recipesViewModel.networkStatus = status
+                recipesViewModel.showNetworkStatus()
+            }
+        }
+
+
         // when user click on the floating action button open the bottom sheet
         binding.recipesFab.setOnClickListener {
-            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheetFragment)
+            // if the internet is available open the bottom sheet
+            if (recipesViewModel.networkStatus) {
+                findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheetFragment)
+
+            }else {
+                // toast a message that there is no internet connection
+                recipesViewModel.showNetworkStatus()
+            }
         }
 
         //return mView
