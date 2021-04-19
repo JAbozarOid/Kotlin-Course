@@ -2,10 +2,9 @@ package com.example.foody.ui.fragments.recipes
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -40,7 +39,7 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class RecipesFragment : Fragment() {
+class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     // we should bind our MainViewModel with the exact variable  which we have created in fragment_recipes.xml
     // when we have converted our fragment_recipes.xml layout to binding layout the FragmentRecipesBinding is automatically created.
@@ -95,10 +94,13 @@ class RecipesFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
 
+        // active menu and override method onCreateOptionMenu below the method setupRecyclerView() for having search menu
+        setHasOptionsMenu(true)
+
         setupRecyclerView()
 
         // set the latest value from DataStore to backOnline
-        recipesViewModel.readBackOnline.observe(viewLifecycleOwner,{
+        recipesViewModel.readBackOnline.observe(viewLifecycleOwner, {
             recipesViewModel.backOnline = it
         })
 
@@ -155,6 +157,26 @@ class RecipesFragment : Fragment() {
         //mView.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         showShimmerEffect()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.recipes_menu, menu)
+
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+    }
+
+    // this is one of the two callbacks of the SearchView.OnQueryTextListener
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    // this is another callback of the SearchView.OnQueryTextListener
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return true
     }
 
     // because the "readRecipes" in mainViewModel is not a suspend function we can put observer inside of lifecycle scope
@@ -244,4 +266,6 @@ class RecipesFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
+
 }
