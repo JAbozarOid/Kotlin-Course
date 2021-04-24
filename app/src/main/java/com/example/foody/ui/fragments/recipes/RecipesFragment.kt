@@ -3,9 +3,10 @@ package com.example.foody.ui.fragments.recipes
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.SearchView
+
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -171,6 +172,9 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     // this is one of the two callbacks of the SearchView.OnQueryTextListener
     override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchApiData(query)
+        }
         return true
     }
 
@@ -242,6 +246,35 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
                     response.data?.let { mAdapter.setData(it) }
+                }
+            }
+
+        })
+    }
+
+    private fun searchApiData(searchQuery: String) {
+        showShimmerEffect()
+        mainViewModel.searchRecipes(recipesViewModel.applySearchQuery(searchQuery))
+        mainViewModel.searchedRecipesResponse.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is NetworkResult.Error -> {
+                    hideShimmerEffect()
+                    loadDataFromCache()
+                    Toast.makeText(
+                        requireContext(),
+                        response.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is NetworkResult.Loading -> {
+                    showShimmerEffect()
+                }
+                is NetworkResult.Success -> {
+                    hideShimmerEffect()
+                    val foodRecipe = response.data
+                    foodRecipe?.let {
+                        mAdapter.setData(it)
+                    }
                 }
             }
 

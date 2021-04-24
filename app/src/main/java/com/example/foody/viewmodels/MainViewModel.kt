@@ -49,6 +49,9 @@ class MainViewModel @ViewModelInject constructor(
      * as in this case returned information would be of no use.
      */
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
+        /**
+         * this suspend function must be called inside of a suspend function or a CoroutineScope
+         */
         getRecipesSafeCall(queries)
     }
 
@@ -107,7 +110,7 @@ class MainViewModel @ViewModelInject constructor(
 
     /**
      * Kotlin operators and symbols
-     * 1- !! : asserts that an expression is non-null
+     * 1- !! : asserts that an expression is non-null, force the null with !!
      * 2- -> :
      *      a) separates the parameters and body of a lambda expression
      *      b) separates the parameters and return type declaration in a function type

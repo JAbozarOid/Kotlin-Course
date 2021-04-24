@@ -67,6 +67,10 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
     }
 
 
+    /**
+     * Kotlin operators and symbols
+     * ?: this operator means that if "preferences[PreferenceKeys.selectedMealType]" has a value put inside selectedMealType and if it doesn't value put DEFAULT_MEAL_TYPE inside
+     */
     val readMealAndDiet: Flow<MealAndDietType> = dataStore.data.catch { exception ->
         if (exception is IOException) {
             emit(emptyPreferences())
