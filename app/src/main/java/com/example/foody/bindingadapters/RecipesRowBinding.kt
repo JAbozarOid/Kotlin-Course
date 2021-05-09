@@ -12,6 +12,7 @@ import coil.load
 import com.example.foody.R
 import com.example.foody.models.Result
 import com.example.foody.ui.fragments.recipes.RecipesFragmentDirections
+import org.jsoup.Jsoup
 import java.lang.Exception
 
 class RecipesRowBinding {
@@ -92,6 +93,19 @@ class RecipesRowBinding {
                 } catch (e: Exception) {
                     Log.d("onRecipeClickListener", e.toString())
                 }
+            }
+        }
+
+        // create a function for parsing html tags
+        // in recipes row layout and details activity the descriptions has html tags
+        // for solving this problem we must use Jsoup Library, which it is a Java Html Parser
+        @BindingAdapter("parseHtml")
+        @JvmStatic
+        fun parseHtml(textView: TextView, description: String?) {
+            if (description != null) {
+                // with this line of code we parse html tags
+                val desc = Jsoup.parse(description).text()
+                textView.text = desc
             }
         }
     }
