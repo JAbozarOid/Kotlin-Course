@@ -35,5 +35,7 @@ class Constants {
         // constant for when the device of the user has internet connection again
         const val PREFERENCES_BACK_ONLINE = "backOnline"
 
+        const val RECIPE_RESULT_KEY = "recipeBundle"
+
     }
 }
