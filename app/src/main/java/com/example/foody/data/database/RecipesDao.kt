@@ -1,9 +1,7 @@
 package com.example.foody.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.example.foody.data.database.entities.FavoriteEntity
 import com.example.foody.data.database.entities.RecipesEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -28,4 +26,19 @@ interface RecipesDao {
     // Query annotation use for custom queries
     @Query("SELECT * FROM recipes_table ORDER BY id ASC")
     fun readRecipes() : Flow<List<RecipesEntity>>
+
+    // *** These below functions are for inserting,reading and updating favorite recipes inside our favorite_recipes_table
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavoriteRecipe(favoriteEntity: FavoriteEntity)
+
+    @Query("SELECT * FROM favorite_recipes_table ORDER BY id ASC")
+    fun readFavoriteRecipes() : Flow<List<FavoriteEntity>>
+
+    @Delete
+    suspend fun deleteFavoriteRecipe(favoriteEntity: FavoriteEntity)
+
+    //delete all
+    @Query("DELETE FROM favorite_recipes_table")
+    suspend fun deleteAllFavoriteRecipes()
+
 }

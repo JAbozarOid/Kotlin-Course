@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.foody.data.Repository
+import com.example.foody.data.database.entities.FavoriteEntity
 import com.example.foody.data.database.entities.RecipesEntity
 import com.example.foody.models.FoodRecipe
 import com.example.foody.util.NetworkResult
@@ -27,7 +28,9 @@ class MainViewModel @ViewModelInject constructor(
     /** ROOM DATABASE */
     // asLiveData cast kotlin flow to LiveData, "asLiveData" is in lifecycle-extensions external library"
     // this readRecipes is not a suspend function
-    val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readDatabase().asLiveData()
+    val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readRecipes().asLiveData()
+    val readFavoriteRecipes: LiveData<List<FavoriteEntity>> =
+        repository.local.readFavoriteRecipes().asLiveData()
 
     /**
      * There are two types of variables – mutable and immutable
@@ -106,6 +109,22 @@ class MainViewModel @ViewModelInject constructor(
     private fun insertRecipes(recipesEntity: RecipesEntity) =
         viewModelScope.launch(Dispatchers.IO) {
             repository.local.insertRecipes(recipesEntity)
+        }
+
+    // for inserting favorite recipes inside to favorite_recipes_table
+    private fun insertFavoriteRecipes(favoriteEntity: FavoriteEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.insertFavoriteRecipes(favoriteEntity)
+        }
+
+    private fun deleteFavoriteRecipes(favoriteEntity: FavoriteEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteFavoriteRecipe(favoriteEntity)
+        }
+
+    private fun deleteAllFavoriteRecipes() =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteAllFavoriteRecipes()
         }
 
     /**
