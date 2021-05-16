@@ -115,7 +115,7 @@ class MainViewModel @Inject constructor(
         }
 
     // for inserting favorite recipes inside to favorite_recipes_table
-    private fun insertFavoriteRecipes(favoriteEntity: FavoriteEntity) =
+    fun insertFavoriteRecipes(favoriteEntity: FavoriteEntity) =
         viewModelScope.launch(Dispatchers.IO) {
             repository.local.insertFavoriteRecipes(favoriteEntity)
         }

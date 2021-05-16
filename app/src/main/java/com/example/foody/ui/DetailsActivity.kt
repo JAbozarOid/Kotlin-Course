@@ -4,19 +4,29 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.navArgs
 import com.example.foody.R
 import com.example.foody.adapters.PagerAdapter
+import com.example.foody.data.database.entities.FavoriteEntity
 import com.example.foody.ui.fragments.ingredinets.IngredientFragment
 import com.example.foody.ui.fragments.instructions.InstructionsFragment
 import com.example.foody.ui.fragments.overview.OverviewFragment
+import com.example.foody.viewmodels.MainViewModel
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_details.*
 
+@AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
 
     private val args by navArgs<DetailsActivityArgs>()
+
+    // for inserting favorite recipe inside our main view model
+    // this is lazy initialization
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,9 +80,28 @@ class DetailsActivity : AppCompatActivity() {
         }
         // when user click on the star icon we want to save in favorite_recipes_table
         else if (item.itemId == R.id.save_to_favorite_menu) {
-
+            saveToFavorites(item)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun saveToFavorites(item: MenuItem) {
+        val favoriteEntity = FavoriteEntity(0, args.result)
+        mainViewModel.insertFavoriteRecipes(favoriteEntity)
+        changeMenuItemColor(item, R.color.yellow)
+        showSnackBar("Recipe Saved.")
+    }
+
+    private fun changeMenuItemColor(item: MenuItem, color: Int) {
+        item.icon.setTint(ContextCompat.getColor(this, color))
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(
+            detailsLayout,
+            message,
+            Snackbar.LENGTH_SHORT
+        ).setAction("Okay") {}.show()
     }
 
 
