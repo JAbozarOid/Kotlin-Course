@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 /**
  * - RecipesFragment Class depend to MainViewModel class
  * - MainViewModel class depend to Repository class
- * - Repository class depend in two classes, one LocalDataSource(Room) class and second one RemoteDataSurce(Retrofit)
+ * - Repository class depend in two classes, one LocalDataSource(Room) class and second one RemoteDataSource(Retrofit)
  * - there is two different cases in which we are going to use a remote data source
  * 1- Database is empty
  * 2- Explicitly Request new data from our particular API
@@ -48,9 +48,9 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     private val binding get() = _binding!!
 
     /**
-     * lateinit :
-     * lateinit means late initialization.
-     * If you do not want to initialize a variable in the constructor instead you want to initialize it later on and if you can guarantee the initialization before using it, then declare that variable with lateinit keyword.
+     * late init :
+     * late init means late initialization.
+     * If you do not want to initialize a variable in the constructor instead you want to initialize it later on and if you can guarantee the initialization before using it, then declare that variable with late init keyword.
      * It will not allocate memory until initialized.
      */
     // private lateinit var mView: View //*** after we converted fragment_recipes.xml to binding layout we replace mView with _binding

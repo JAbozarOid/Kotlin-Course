@@ -2,6 +2,7 @@ package com.example.foody.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -57,11 +58,22 @@ class DetailsActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.details_menu, menu)
+        return true
+    }
+
     // when user click on the back button on the toolbar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
         }
+        // when user click on the star icon we want to save in favorite_recipes_table
+        else if (item.itemId == R.id.save_to_favorite_menu) {
+
+        }
         return super.onOptionsItemSelected(item)
     }
+
+
 }
