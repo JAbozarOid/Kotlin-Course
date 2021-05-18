@@ -42,4 +42,5 @@
     <string name="vegan_txt">Vegan</string>
     <string name="vegetarian_txt">Vegetarian</string>
     <string name="save_to_favorites">save to favorites</string>
+    <string name="no_favorite_recipes">No Favorite Recipes</string>
 </resources>
