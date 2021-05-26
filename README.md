@@ -16,6 +16,7 @@ Develop beautiful Android App in Android Studio
 ## Technologies
 
 - Kotlin Coroutines
+- Kotlin Flow
 - Android Architecture Component
 - Retrofit
 - Rest Api
