@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.foody.data.database.entities.FavoriteEntity
+import com.example.foody.data.database.entities.FoodJokeEntity
 import com.example.foody.data.database.entities.RecipesEntity
 
 /**
@@ -13,7 +14,7 @@ import com.example.foody.data.database.entities.RecipesEntity
  * After adding FavoriteEntity::class to entities you must change the version to 2 but for now we uninstall the app
  */
 @Database(
-    entities = [RecipesEntity::class,FavoriteEntity::class],
+    entities = [RecipesEntity::class,FavoriteEntity::class,FoodJokeEntity::class],
     version = 1,
     exportSchema = false
 )
