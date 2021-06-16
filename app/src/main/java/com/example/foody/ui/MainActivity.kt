@@ -14,10 +14,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var navController : NavController
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // this line of code show splash screen before the MainActivity is shown
+        setTheme(R.style.AppTheme)
+
         setContentView(R.layout.activity_main)
 
         /**
