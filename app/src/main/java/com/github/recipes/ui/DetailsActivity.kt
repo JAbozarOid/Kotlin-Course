@@ -11,18 +11,25 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.navArgs
 import com.github.recipes.R
 import com.github.recipes.adapters.PagerAdapter
+//import com.github.recipes.adapters.PagerAdapter
 import com.github.recipes.data.database.entities.FavoriteEntity
+import com.github.recipes.databinding.ActivityDetailsBinding
+import com.github.recipes.databinding.ActivityMainBinding
 import com.github.recipes.ui.fragments.ingredinets.IngredientFragment
 import com.github.recipes.ui.fragments.instructions.InstructionsFragment
 import com.github.recipes.ui.fragments.overview.OverviewFragment
 import com.github.recipes.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_details.*
+//import kotlinx.android.synthetic.main.activity_details.*
 import java.lang.Exception
 
 @AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
+
+    // after migrating from kotlinx.android.synthetic to view binding, first comment kotlinx.android.synthetic import and then create two below variables
+    private lateinit var binding: ActivityDetailsBinding
 
     private val args by navArgs<DetailsActivityArgs>()
 
@@ -35,10 +42,16 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
 
-        setSupportActionBar(toolbar)
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+
+        //setContentView(R.layout.activity_details)
+        setContentView(binding.root)
+
+        //setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
+
+        binding.toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // initialize pager adapter here and add fragments that we want to show in view pager, so we add fragments in specific order
@@ -59,18 +72,35 @@ class DetailsActivity : AppCompatActivity() {
         resultBundle.putParcelable("recipeBundle", args.result)
 
         // initialize pager adapter
-        val pagerAdapter = PagerAdapter(
+        /*val pagerAdapter = PagerAdapter(
             resultBundle,
             fragments,
             titles,
             supportFragmentManager
+        )*/
+        // *** after changing FragmentPagerAdapter the above code is not working, so we add the below codes
+        val pagerAdapter = PagerAdapter(
+            resultBundle,
+            fragments,
+            this
         )
 
         // set the pager adapter to view pager in details activity
-        viewPager.adapter = pagerAdapter
+        //viewPager.adapter = pagerAdapter
+        //binding.viewPager.adapter = pagerAdapter
+        // *** after changing FragmentPagerAdapter the above code is not working, so we add the below codes
+        binding.viewPager2.apply {
+            adapter = pagerAdapter
+        }
 
         // set each fragments to each related fragments
-        tabLayout.setupWithViewPager(viewPager)
+        //tabLayout.setupWithViewPager(viewPager)
+
+        //binding.tabLayout.setupWithViewPager(binding.viewPager2)
+        // *** after migrating from viewPager to viewPager2 the above line of code doesn't work, so we add the code below
+        TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
+            tab.text = titles[position]
+        }.attach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -141,7 +171,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun showSnackBar(message: String) {
         Snackbar.make(
-            detailsLayout,
+            binding.detailsLayout,
             message,
             Snackbar.LENGTH_SHORT
         ).setAction("Okay") {}.show()

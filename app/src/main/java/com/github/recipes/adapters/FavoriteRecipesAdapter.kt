@@ -13,7 +13,7 @@ import com.github.recipes.ui.fragments.favorites.FavoriteRecipesFragmentDirectio
 import com.github.recipes.util.RecipesDiffUtil
 import com.github.recipes.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.favorite_recipes_row_layout.view.*
+//import kotlinx.android.synthetic.main.favorite_recipes_row_layout.view.*
 
 // for implementing contextual action mode for long click listener this class should extend from ActionMode
 class FavoriteRecipesAdapter(
@@ -39,7 +39,7 @@ class FavoriteRecipesAdapter(
     private lateinit var rootView: View
 
     // we must pass binding of our view to this class, RecipesRowLayoutBinding is the automatic generating class
-    class MyViewHolder(private val binding: FavoriteRecipesRowLayoutBinding) :
+    class MyViewHolder(val binding: FavoriteRecipesRowLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(favoriteEntity: FavoriteEntity) {
@@ -74,7 +74,8 @@ class FavoriteRecipesAdapter(
         /**
          * single click listener
          */
-        holder.itemView.favoriteRecipesRowLayout.setOnClickListener {
+        // itemView is replaced with binding after migrating from KotlinX synthetics with view binding
+        holder.binding.favoriteRecipesRowLayout.setOnClickListener {
             if (multiSelection) {
                 applySelection(holder, currentRecipe)
             } else {
@@ -90,7 +91,8 @@ class FavoriteRecipesAdapter(
         /**
          * long click listener
          */
-        holder.itemView.favoriteRecipesRowLayout.setOnLongClickListener {
+        // itemView is replaced with binding after migrating from KotlinX synthetics with view binding
+        holder.binding.favoriteRecipesRowLayout.setOnLongClickListener {
             if (!multiSelection) {
                 multiSelection = true
                 requireActivity.startActionMode(this)
@@ -165,9 +167,10 @@ class FavoriteRecipesAdapter(
     }
 
     // when user click long on the one item or multiple items, that items has selected and we want to change the color of that items has selected
+    // itemView is replaced with binding after migrating from KotlinX synthetics with view binding
     private fun changeRecipeStyle(holder: MyViewHolder, backgroundColor: Int, strokeColor: Int) {
         // change the color of the layout when it's selected(the whole card view)
-        holder.itemView.favoriteRecipesRowLayout.setBackgroundColor(
+        holder.binding.favoriteRecipesRowLayout.setBackgroundColor(
             ContextCompat.getColor(
                 requireActivity,
                 backgroundColor
@@ -175,7 +178,7 @@ class FavoriteRecipesAdapter(
         )
 
         // change the color of the stroke of card view
-        holder.itemView.favorite_row_cardView.strokeColor =
+        holder.binding.favoriteRowCardView.strokeColor =
             ContextCompat.getColor(requireActivity, strokeColor)
     }
 

@@ -87,7 +87,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         //mView = inflater.inflate(R.layout.fragment_recipes, container, false)
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
@@ -295,10 +295,15 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     // we are going to avoid the memory leaks
-    override fun onDestroy() {
+    /*override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
+    }*/
 
+    // we are going to avoid the memory leaks
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

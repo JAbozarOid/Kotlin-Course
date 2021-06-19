@@ -30,7 +30,7 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
 
         //val view = inflater.inflate(R.layout.fragment_favorite_recipes, container, false)
@@ -55,8 +55,14 @@ class FavoriteRecipesFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroy() {
+    /*override fun onDestroy() {
         super.onDestroy()
+        _binding = null
+        mAdapter.clearContextualActionMode()
+    }*/
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
         mAdapter.clearContextualActionMode()
     }

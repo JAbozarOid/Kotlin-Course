@@ -2,8 +2,10 @@ package com.github.recipes.adapters
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
+//import androidx.fragment.app.FragmentManager
+//import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
 /**
  * This class is used for handling viewpager in DetailsActivity class
@@ -11,7 +13,7 @@ import androidx.fragment.app.FragmentPagerAdapter
  * 1- Bundle : is used to parse data from our details activity to our fragments
  * BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT : this indicates that only the current fragment will be in the resume state and all other fragments are kept it started
  */
-class PagerAdapter(
+/*class PagerAdapter(
     private val resultBundle: Bundle,
     private val fragments: ArrayList<Fragment>,
     private val title: ArrayList<String>,
@@ -32,5 +34,25 @@ class PagerAdapter(
 
     override fun getPageTitle(position: Int): CharSequence? {
         return title[position]
+    }
+}*/
+
+/**
+ * FragmentPagerAdapter is deprecated so we use FragmentStateAdapter
+ */
+
+class PagerAdapter(
+    private val resultBundle: Bundle,
+    private val fragments: ArrayList<Fragment>,
+    fragmentActivity: FragmentActivity
+) : FragmentStateAdapter(fragmentActivity) {
+
+    override fun getItemCount(): Int {
+        return fragments.size
+    }
+
+    override fun createFragment(position: Int): Fragment {
+        fragments[position].arguments = resultBundle
+        return fragments[position]
     }
 }

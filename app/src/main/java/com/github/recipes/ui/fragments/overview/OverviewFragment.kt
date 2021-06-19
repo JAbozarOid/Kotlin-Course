@@ -8,13 +8,18 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import coil.load
 import com.github.recipes.R
+import com.github.recipes.databinding.FragmentInstructionsBinding
+import com.github.recipes.databinding.FragmentOverviewBinding
 import com.github.recipes.models.Result
 import com.github.recipes.util.Constants.Companion.RECIPE_RESULT_KEY
-import kotlinx.android.synthetic.main.fragment_overview.view.*
+//import kotlinx.android.synthetic.main.fragment_overview.view.*
 import org.jsoup.Jsoup
 
 class OverviewFragment : Fragment() {
 
+    // after migrating from kotlinx.android.synthetic to view binding, first comment kotlinx.android.synthetic import and then create two below variables
+    private var _binding: FragmentOverviewBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,35 +28,44 @@ class OverviewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_overview, container, false)
+        //val view = inflater.inflate(R.layout.fragment_overview, container, false)
+        _binding = FragmentOverviewBinding.inflate(inflater, container, false)
 
         // get arguments from bundle which bundle hold the result which means recipe
         val args = arguments
         val myBundle: Result? = args?.getParcelable(RECIPE_RESULT_KEY)
 
-        view.main_imageView.load(myBundle?.image)
-        view.title_textView.text = myBundle?.title
-        view.likes_textView.text = myBundle?.aggregateLikes.toString()
-        view.time_textView.text = myBundle?.readyInMinutes.toString()
+        //view.main_imageView.load(myBundle?.image)
+        binding.mainImageView.load(myBundle?.image)
+
+        //view.title_textView.text = myBundle?.title
+        binding.titleTextView.text = myBundle?.title
+
+        //view.likes_textView.text = myBundle?.aggregateLikes.toString()
+        binding.likesTextView.text = myBundle?.aggregateLikes.toString()
+
+        //view.time_textView.text = myBundle?.readyInMinutes.toString()
+        binding.timeTextView.text = myBundle?.readyInMinutes.toString()
 
         // view.summary_textView.text = myBundle?.summary
         //*** instead of using the above line of code use the below code for removing html tags
         myBundle?.summary.let {
             val summary = Jsoup.parse(it).text()
-            view.summary_textView.text = summary
+            //view.summary_textView.text = summary
+            binding.summaryTextView.text = summary
         }
 
 
         if (myBundle?.vegetarian == true) {
-            view.vegetarian_imageView.setColorFilter(
+            binding.vegetarianImageView.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
                 )
             )
-            view.vegetarian_textView.setTextColor(
+            binding.vegetarianTextView.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
@@ -59,13 +73,13 @@ class OverviewFragment : Fragment() {
             )
         }
         if (myBundle?.vegan == true) {
-            view.vegan_imageView.setColorFilter(
+            binding.veganImageView.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
                 )
             )
-            view.vegan_textView.setTextColor(
+            binding.veganTextView.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
@@ -73,13 +87,13 @@ class OverviewFragment : Fragment() {
             )
         }
         if (myBundle?.glutenFree == true) {
-            view.glutenFree_imageView.setColorFilter(
+            binding.glutenFreeImageView.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
                 )
             )
-            view.glutenFree_textView.setTextColor(
+            binding.glutenFreeTextView.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
@@ -87,13 +101,13 @@ class OverviewFragment : Fragment() {
             )
         }
         if (myBundle?.dairyFree == true) {
-            view.diary_free_imageView.setColorFilter(
+            binding.diaryFreeImageView.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
                 )
             )
-            view.diary_free_textView.setTextColor(
+            binding.diaryFreeTextView.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
@@ -101,13 +115,13 @@ class OverviewFragment : Fragment() {
             )
         }
         if (myBundle?.veryHealthy == true) {
-            view.healthy_imageView.setColorFilter(
+            binding.healthyImageView.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
                 )
             )
-            view.healthy_textView.setTextColor(
+            binding.healthyTextView.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
@@ -115,13 +129,13 @@ class OverviewFragment : Fragment() {
             )
         }
         if (myBundle?.cheap == true) {
-            view.cheap_imageView.setColorFilter(
+            binding.cheapImageView.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
                 )
             )
-            view.cheap_textView.setTextColor(
+            binding.cheapTextView.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.green
@@ -129,8 +143,14 @@ class OverviewFragment : Fragment() {
             )
         }
 
-        return view
+        //return view
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // avoid memory leaks
+        _binding = null
+    }
 
 }

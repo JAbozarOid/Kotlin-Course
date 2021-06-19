@@ -3,8 +3,10 @@ package com.github.recipes.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+//import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
+//import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.RawValue
 
 // add this annotation for set new argument for DetailsActivity to choose the type Result from custom parcelable
 @Parcelize

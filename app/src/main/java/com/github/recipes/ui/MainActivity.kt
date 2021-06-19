@@ -8,11 +8,16 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.recipes.R
+import com.github.recipes.databinding.ActivityMainBinding
+import com.github.recipes.databinding.FragmentRecipesBottomSheetBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
+//import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    // after migrating from kotlinx.android.synthetic to view binding, first comment kotlinx.android.synthetic import and then create two below variables
+    private lateinit var binding: ActivityMainBinding
 
     private lateinit var navController: NavController
 
@@ -22,7 +27,10 @@ class MainActivity : AppCompatActivity() {
         // this line of code show splash screen before the MainActivity is shown
         setTheme(R.style.AppTheme)
 
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        //setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         /**
          * we can implement navController with two ways
@@ -48,7 +56,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         // bottomNavigationView is the navigation that access this view from our activity
-        bottomNavigationView.setupWithNavController(navController)
+        //bottomNavigationView.setupWithNavController(navController)
+        binding.bottomNavigationView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
     }
