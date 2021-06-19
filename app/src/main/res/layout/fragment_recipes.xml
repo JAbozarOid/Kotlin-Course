@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lightGray"
+        android:background="@color/backgroundColor"
         tools:context=".ui.fragments.recipes.RecipesFragment">
 
         <com.todkars.shimmer.ShimmerRecyclerView
@@ -48,10 +48,10 @@
 
         <ImageView
             android:id="@+id/error_imageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
             readApiResponse="@{mainViewModel.recipesResponse}"
             readDatabase="@{mainViewModel.readRecipes}"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:alpha="0.5"
             android:contentDescription="@string/string_sad_icon"
             android:src="@drawable/ic_sad"
@@ -64,10 +64,10 @@
 
         <TextView
             android:id="@+id/error_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             readApiResponse2="@{mainViewModel.recipesResponse}"
             readDatabase2="@{mainViewModel.readRecipes}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:alpha="0.5"
             android:text="@string/string_no_internet_connection"
