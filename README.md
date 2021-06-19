@@ -1,4 +1,4 @@
-# Android Development with Kotlin
+# Recipes App - Android Development with Kotlin
 
 Create a fully functional Android application using the power of Kotlin programming language.
 

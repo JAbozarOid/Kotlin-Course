@@ -7,7 +7,7 @@
 
         <variable
             name="mainViewModel"
-            type="com.example.foody.viewmodels.MainViewModel" />
+            type="com.github.recipes.viewmodels.MainViewModel" />
 
     </data>
 
