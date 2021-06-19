@@ -106,8 +106,9 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
 
         // *** check network available or not
-        lifecycleScope.launch {
-            // collect is a suspend function and must be run in Coroutine
+        lifecycleScope.launchWhenStarted {
+            // collect is a suspend function and must be run in Coroutine,
+            // Collect when we inside RecipesFragment ("I replaced launch with launchWhenStarted"), if launch we get an error when we didn't have internet connection and when we are in other pages
             networkListener = NetworkListener()
             networkListener.checkNetworkAvailability(requireContext()).collect { status ->
                 Log.d("NetworkListener", status.toString())
